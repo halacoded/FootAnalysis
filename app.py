@@ -17,7 +17,7 @@ def predict():
     file = request.files["file"]
     img = Image.open(file).resize((224, 224))  # resize to model input
     arr = np.expand_dims(np.array(img)/255.0, axis=0)  # normalize
-    
+  
     # Run prediction
     pred = model.predict(arr)
     class_index = int(np.argmax(pred))
