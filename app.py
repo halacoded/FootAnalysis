@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import tensorflow as tf
 import numpy as np
 from PIL import Image
+from tensorflow.keras.applications.efficientnet import preprocess_input
 
 # Load your exported model
 model = tf.keras.models.load_model("best_model.keras")
@@ -16,7 +17,13 @@ def predict():
     # Get uploaded file
     file = request.files["file"]
     img = Image.open(file).resize((224, 224))  # resize to model input
-    arr = np.expand_dims(np.array(img)/255.0, axis=0)  # normalize
+    
+    # Convert to array
+    arr = np.array(img)
+    arr = np.expand_dims(arr, axis=0)
+    
+    # Use EfficientNet preprocessing
+    arr = preprocess_input(arr)
   
     # Run prediction
     pred = model.predict(arr)
